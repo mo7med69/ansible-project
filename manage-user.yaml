@@ -1,1 +1,35 @@
+--
+- name: Manage users and groups on CentOS
+  hosts: centos
+  become: yes
+  tasks:
+    - name: Create a new group
+      group:
+	name: devops
+        state: present
+
+    - name: Create a new user
+      user:
+	name: john
+        comment: "John Doe"
+        password: "{{ 'password' | password_hash('sha512') }}"
+        shell: /bin/bash
+        groups: devops
+        state: present
+
+    - name: Create another user
+      user:
+	name: jane
+        comment: "Jane Doe"
+        password: "{{ 'secure_password' | password_hash('sha512') }}"
+        shell: /bin/bash
+        groups: devops
+        state: present
+
+    - name: Ensure user is in the devops group
+      user:
+	name: john
+        groups: devops
+        append: yes
+
 
